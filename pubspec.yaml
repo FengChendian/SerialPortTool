@@ -39,6 +39,7 @@ dependencies:
   system_theme: ^1.0.1
   convert: ^3.0.0
   fl_chart: ^0.36.2
+  bitsdojo_window: ^0.1.1+1
 
 dev_dependencies:
   flutter_test:

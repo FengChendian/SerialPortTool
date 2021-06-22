@@ -18,6 +18,9 @@ class ConnectButton extends StatelessWidget {
                   checked: sideBarManager.hasConnected,
                   // padding: EdgeInsets.symmetric(horizontal: 4),
                   onChanged: (v) {
+                    if (dataManager.selectedPort == '') {
+                      return;
+                    }
                     sideBarManager.changeConnectState(v);
                     if (sideBarManager._hasConnected) {
                       dataManager.start();
@@ -26,7 +29,10 @@ class ConnectButton extends StatelessWidget {
                     }
                   },
                 ),
-                Text(sideBarManager.connectText!, style: TextStyle(fontFamily: "NotoSans SC"),),
+                Text(
+                  sideBarManager.connectText!,
+                  style: TextStyle(fontFamily: "NotoSans SC"),
+                ),
               ],
             ),
           ),

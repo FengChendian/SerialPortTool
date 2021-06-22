@@ -4,21 +4,13 @@ import 'dart:typed_data';
 import 'package:convert/convert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
 import 'package:serial_port_win32/serial_port_win32.dart';
+import 'package:serialport_tool/constants.dart';
+import 'package:win32/win32.dart';
 
-class DataManager with ChangeNotifier implements ReassembleHandler {
-  @override
-  void reassemble() {
-    // port.close();
-    print('Did hot-reload');
-  }
-
+class DataManager with ChangeNotifier {
+  /// one instance has one [port]
   late SerialPort? port;
-
-  bool _running = false;
-
-  bool get isRunning => _running;
 
   String _receivedData = '';
 
@@ -30,61 +22,47 @@ class DataManager with ChangeNotifier implements ReassembleHandler {
 
   late Timer _timer;
 
-  int length = 1;
-
   List<String> portsList = [''];
 
-  String defaultValue = '';
+  // String defaultValue = '';
 
   String _selectedPort = '';
 
+  String get selectedPort => _selectedPort;
+
   late Uint8List _uInt8Data;
 
+  int baudRate = CBR_115200;
+  int byteSize = 8;
+  int parity = NOPARITY;
+  int stopBits = ONESTOPBIT;
+
+  /// 设置选中时串口号时调用
   void updateSelectedPort(String value) {
     _selectedPort = value;
   }
 
+  /// [start] read data
   void start() async {
-    port = SerialPort(_selectedPort);
-    if (port!.isOpened == false) {
-      port!.reopenPort();
+    if (_selectedPort == '') {
+      return;
     }
-    _timer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
-      // _receivedData = String.fromCharCodes(await port!.readBytes(2));
-      _uInt8Data = await port!.readBytes(1);
-      if (_uInt8Data.isEmpty && _uInt8Data.any((element) => element == 0)) {
-        return;
-      }
-      _receivedData = hex.encode(_uInt8Data).substring(0, 2).toUpperCase();
-      length++;
-      _allDataString += _receivedData + ' ';
-      notifyListeners();
-    });
-  }
+    port = SerialPort(_selectedPort, openNow: false);
+    port!.openWithSettings(
+      BaudRate: baudRate,
+      ByteSize: byteSize,
+      StopBits: stopBits,
+      Parity: parity,
+    );
 
-  void startReadLine() async {
-    _running = true;
-    // while (i++ < 100) {
-    //   if (running == false) {
-    //     return;
-    //   }
-    // print(port.readBytes(20));
-    _timer = Timer.periodic(Duration(milliseconds: 500), (timer) async {
-      _receivedData = String.fromCharCodes(await port!.readBytes(200));
-      // _receivedData = "windows10 ";
-      if (_receivedData.isNotEmpty &&
-          receivedData.codeUnits.any((element) => element != 0)) {
-        // test.add(Text(_receivedData));
-        _allDataString += ' $_receivedData';
-        // length++;
-        // print('data: $_receivedData');
+    _timer = Timer.periodic(Duration(milliseconds: 20), (timer) async {
+      _uInt8Data = await port!.readBytes(1);
+      if (_uInt8Data.isNotEmpty) {
+        _receivedData = hex.encode(_uInt8Data).toUpperCase();
+        _allDataString += _receivedData + ' ';
         notifyListeners();
       }
     });
-
-    // notifyListeners();
-    //   sleep(Duration(milliseconds: 500));
-    // }
   }
 
   void updateCommPorts() {
@@ -92,19 +70,36 @@ class DataManager with ChangeNotifier implements ReassembleHandler {
     if (portsList.isEmpty) {
       portsList = [''];
     }
-    defaultValue = portsList[0];
-    _selectedPort = defaultValue;
+    updateSelectedPort(portsList[0]);
     notifyListeners();
   }
 
   void setDefaultPort(String value) {
-    defaultValue = value;
+    _selectedPort = value;
     notifyListeners();
   }
 
-  void stop() {
-    _running = false;
+  void config(String title, String value) {
+    switch (title) {
+      case '波特率':
+        baudRate = baudRateMap[value]!;
+        break;
+      case '数据位':
+        byteSize = dataBitsMap[value]!;
+        break;
+      case '校验位':
+        parity = parityMap[value]!;
+        break;
+      case '停止位':
+        stopBits = stopBitsMap[value]!;
+        break;
+      default:
+        throw Exception('no such config title');
+    }
+  }
 
+  void stop() {
+    /// cancel or close all things
     _timer.cancel();
     port!.close();
   }
@@ -116,33 +111,4 @@ class DataManager with ChangeNotifier implements ReassembleHandler {
 
     super.dispose();
   }
-// String data = '';
-// Stream<String> get receivedData async*{
-//   int i = 0;
-//   while (i < 10){
-//     // data += String.fromCharCodes(port.readBytes(20));
-//     await Future.delayed(Duration(seconds: 1), () {
-//       i++;
-//     });
-//     yield i.toString();
-//   }
-//
-// }
-
-// update() async{
-//   _receivedData.add(String.fromCharCodes(port.readBytes(20)));
-// }
-
-// async{
-//    // for(int i = 0; i < 10; i++){
-//      _receivedData += String.fromCharCodes(port.readBytes(20));
-//      // print(_receivedData);
-//
-//    // }
-//
-//  }
-// void close() {
-//   _receivedDataSubscription.cancel();
-//   _receivedData.close();
-// }
 }
