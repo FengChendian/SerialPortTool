@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' show InkWell;
+// import 'package:flutter/material.dart' show InkWell;
 import 'package:provider/provider.dart';
 import 'package:serialport_tool/UI_components/title_combo_menu.dart';
 import 'package:serialport_tool/data_manager.dart';
@@ -24,7 +24,7 @@ class PortsMenu extends StatelessWidget {
               child!,
               Row(
                 children: [
-                  InkWell(
+                  GestureDetector(
                       onTap: () {
                         dataManager.updateCommPorts();
                         // context.read<DataManager>().updateCommPorts();

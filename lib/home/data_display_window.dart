@@ -1,7 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart' show Card;
-import 'package:serialport_tool/constants.dart';
 import 'package:serialport_tool/data_manager.dart';
 
 class DataDisplayWindow extends StatelessWidget {
@@ -27,44 +25,37 @@ class DataDisplayWindow extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(8, 14, 14, 14),
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: 40,
-            child: Text(
-              '接收',
-              // style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              style: subtitleTextStyle,
-            ),
-          ),
+          // Container(
+          //   width: double.infinity,
+          //   height: 40,
+          //   child: Text(
+          //     '接收',
+          //     // style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          //     style: subtitleTextStyle,
+          //   ),
+          // ),
           Expanded(
             child: SizedBox(
               width: double.infinity,
-              child: Card(
-                elevation: 0,
-                margin: EdgeInsets.symmetric(vertical: 8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                // color: secondaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Consumer<DataManager>(
-                    builder: (BuildContext context, value, Widget? child) {
-                      return Text(value.allDataString);
-                    },
-                  ),
-                ),
+              child: Consumer<DataManager>(
+                builder: (BuildContext context, value, Widget? child) {
+                  return TextBox(
+                    // value.allDataString,
+                    style: TextStyle(color: Colors.green),
+                  );
+                },
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: 40,
-            margin: EdgeInsets.only(top: 4),
-            child: const Text(
-              '发送',
-              style: subtitleTextStyle,
-            ),
-          ),
+          // Container(
+          //   width: double.infinity,
+          //   height: 40,
+          //   margin: EdgeInsets.only(top: 4),
+          //   child: const Text(
+          //     '发送',
+          //     style: subtitleTextStyle,
+          //   ),
+          // ),
           // Row(),
           Container(
             height: 50,
@@ -92,10 +83,12 @@ class DataDisplayWindow extends StatelessWidget {
                     height: double.infinity,
                     child: Button(
                       onPressed: () {},
+                      style: ButtonStyle(backgroundColor: ButtonState.all(Colors.blue)),
                       child: Center(
                         child: Text(
                           '发送',
-                          style: TextStyle( fontFamily: "NotoSans SC",),
+                          style: TextStyle(
+                              fontFamily: "NotoSans SC", color: Colors.white),
                         ),
                       ),
                       // style: ButtonStyle(

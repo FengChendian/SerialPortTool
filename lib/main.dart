@@ -1,7 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show Scaffold;
 import 'package:provider/provider.dart';
 import 'package:serialport_tool/home/config_bar.dart';
 import 'package:serialport_tool/data_manager.dart';
@@ -130,7 +129,7 @@ class MyHomePage extends StatelessWidget {
             );
           }(),
         ),
-        useAcrylic: false,
+        useAcrylic: true,
         pane: NavigationPane(
           items: items,
           selected: navigationManager.index,
@@ -150,8 +149,8 @@ class MyHomePage extends StatelessWidget {
         content: NavigationBody(
           index: navigationManager.index,
           children: [
-            Scaffold(
-                body: Row(
+            ScaffoldPage(
+                content: Row(
               children: [
                 Expanded(
                   flex: 5,
@@ -160,6 +159,7 @@ class MyHomePage extends StatelessWidget {
                     child: ConfigBar(),
                   ),
                 ),
+                // Divider(direction: Axis.vertical,),
                 Expanded(
                   flex: 12,
                   child: DataDisplayWindow(),

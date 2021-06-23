@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:serial_port_win32/serial_port_win32.dart';
 import 'package:serialport_tool/constants.dart';
