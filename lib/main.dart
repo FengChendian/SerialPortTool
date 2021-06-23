@@ -74,6 +74,14 @@ class MyApp extends StatelessWidget {
                     ? Brightness.dark
                     : Brightness.light,
             visualDensity: VisualDensity.standard,
+            // acrylicBackgroundColor: Colors.white,
+            scaffoldBackgroundColor: Color(0xfff1f0ed),
+            // dividerTheme: DividerThemeData(
+            //   decoration: BoxDecoration(
+            //     color: Color(0xfff1f0ed),
+            //   ),
+            // ),
+            // shadowColor: Colors.transparent,
             focusTheme: FocusThemeData(
               glowFactor: is10footScreen() ? 2.0 : 0.0,
             ),
@@ -129,7 +137,7 @@ class MyHomePage extends StatelessWidget {
             );
           }(),
         ),
-        useAcrylic: true,
+        // useAcrylic: true,
         pane: NavigationPane(
           items: items,
           selected: navigationManager.index,
@@ -150,22 +158,30 @@ class MyHomePage extends StatelessWidget {
           index: navigationManager.index,
           children: [
             ScaffoldPage(
+                padding: EdgeInsets.symmetric(vertical: 8),
                 content: Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: ConfigBar(),
-                  ),
-                ),
-                // Divider(direction: Axis.vertical,),
-                Expanded(
-                  flex: 12,
-                  child: DataDisplayWindow(),
-                ),
-              ],
-            )),
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Container(
+                          child: ConfigBar(),
+                          // opacity: 1,
+                          // elevation: 1,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    // Divider(direction: Axis.vertical,),
+                    Expanded(
+                      flex: 12,
+                      child: DataDisplayWindow(),
+                    ),
+                  ],
+                )),
             LineChartSample7(),
           ],
         ), // This trailing comma makes auto-formatting nicer for build methods.

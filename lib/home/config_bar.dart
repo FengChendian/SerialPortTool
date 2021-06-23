@@ -17,7 +17,7 @@ class ConfigBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(8, 0, 14, 8),
+      margin: EdgeInsets.fromLTRB(8, 0, 14, 0),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
         child: Column(

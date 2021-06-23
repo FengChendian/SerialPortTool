@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as md;
 import 'package:provider/provider.dart';
 import 'package:serialport_tool/data_manager.dart';
 
@@ -20,9 +21,9 @@ class DataDisplayWindow extends StatelessWidget {
     // SchedulerBinding.instance!.addPostFrameCallback((_) {
     //   _controller.jumpTo(_controller.position.maxScrollExtent);
     // });
-
+    final transmitTextEditingController = TextEditingController();
     return Container(
-      margin: EdgeInsets.fromLTRB(8, 14, 14, 14),
+      margin: EdgeInsets.only(right: 8),
       child: Column(
         children: [
           // Container(
@@ -35,18 +36,62 @@ class DataDisplayWindow extends StatelessWidget {
           //   ),
           // ),
           Expanded(
-            child: SizedBox(
-              width: double.infinity,
-              child: Consumer<DataManager>(
-                builder: (BuildContext context, value, Widget? child) {
-                  return TextBox(
-                    // value.allDataString,
-                    style: TextStyle(color: Colors.green),
-                  );
-                },
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4), color: Colors.white),
+              // padding: EdgeInsets.symmetric(8),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        child: md.ElevatedButton(
+                          style: md.ButtonStyle(
+                            elevation: md.MaterialStateProperty.all(1),
+                            backgroundColor:
+                                md.MaterialStateProperty.all(md.Colors.white),
+                          ),
+                          // style: ButtonStyle(
+                          //     backgroundColor: ButtonState.all(Colors.white),
+                          //     elevation: ButtonState.all(2),
+                          //     shadowColor: ButtonState.all(Colors.transparent),
+                          //     shape: ButtonState.all(RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(14)))),
+                          onPressed: () {},
+                          child: Text(
+                            "Hex",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green),
+                          ),
+                          // onTap: () {},
+                        ),
+                      ),
+                      // Divider(
+                      //   direction: Axis.vertical,
+                      //   size: 20,
+                      // )
+                    ],
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Consumer<DataManager>(
+                        builder: (BuildContext context, value, Widget? child) {
+                          return Text(
+                            value.receivedTextEditingController.text,
+                            style: TextStyle(color: Colors.green),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
           // Container(
           //   width: double.infinity,
           //   height: 40,
@@ -58,7 +103,7 @@ class DataDisplayWindow extends StatelessWidget {
           // ),
           // Row(),
           Container(
-            height: 50,
+            height: 45,
             child: Row(
               children: [
                 Expanded(
@@ -66,10 +111,17 @@ class DataDisplayWindow extends StatelessWidget {
                   child: SizedBox(
                     width: double.infinity,
                     height: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      // alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 8),
                       child: TextBox(
+                        controller: transmitTextEditingController,
                         placeholder: '发送数据',
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            // border: Border.all(width: 0),
+                            color: Colors.white),
                         // maxLines: null,
                         // decoration: InputDecoration(border: InputBorder.none),
                       ),
@@ -79,27 +131,34 @@ class DataDisplayWindow extends StatelessWidget {
                 Expanded(
                   child: Container(
                     // padding: const EdgeInsets.all(8.0),
-                    margin: EdgeInsets.fromLTRB(8, 8, 0, 8),
+                    margin: EdgeInsets.fromLTRB(8, 8, 0, 0),
                     height: double.infinity,
-                    child: Button(
-                      onPressed: () {},
-                      style: ButtonStyle(backgroundColor: ButtonState.all(Colors.blue)),
-                      child: Center(
-                        child: Text(
-                          '发送',
-                          style: TextStyle(
-                              fontFamily: "NotoSans SC", color: Colors.white),
+                    child: Consumer<DataManager>(
+                      builder: (_, dataManager, __) => Button(
+                        onPressed: () {
+                          dataManager
+                              .transmitData(transmitTextEditingController.text);
+                          transmitTextEditingController.clear();
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: ButtonState.all(Colors.blue)),
+                        child: Center(
+                          child: Text(
+                            '发送',
+                            style: TextStyle(
+                                fontFamily: "NotoSans SC", color: Colors.white),
+                          ),
                         ),
+                        // style: ButtonStyle(
+                        //     backgroundColor:
+                        //         MaterialStateProperty.all<Color>(Colors.blue),
+                        //     shape: MaterialStateProperty.all(
+                        //         RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.circular(8)))),
                       ),
-                      // style: ButtonStyle(
-                      //     backgroundColor:
-                      //         MaterialStateProperty.all<Color>(Colors.blue),
-                      //     shape: MaterialStateProperty.all(
-                      //         RoundedRectangleBorder(
-                      //             borderRadius: BorderRadius.circular(8)))),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           )

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:serial_port_win32/serial_port_win32.dart';
 import 'package:serialport_tool/constants.dart';
@@ -15,9 +16,11 @@ class DataManager with ChangeNotifier {
 
   String get receivedData => _receivedData;
 
-  String _allDataString = '';
+  // String _allDataString = '';
+  //
+  // String get allDataString => _allDataString;
 
-  String get allDataString => _allDataString;
+  final receivedTextEditingController = TextEditingController();
 
   late Timer _timer;
 
@@ -29,12 +32,13 @@ class DataManager with ChangeNotifier {
 
   String get selectedPort => _selectedPort;
 
+  /// 存储接收到的Uint8数据
   late Uint8List _uInt8Data;
 
-  int baudRate = CBR_115200;
-  int byteSize = 8;
-  int parity = NOPARITY;
-  int stopBits = ONESTOPBIT;
+  int _baudRate = CBR_115200;
+  int _byteSize = 8;
+  int _parity = NOPARITY;
+  int _stopBits = ONESTOPBIT;
 
   /// 设置选中时串口号时调用
   void updateSelectedPort(String value) {
@@ -48,17 +52,17 @@ class DataManager with ChangeNotifier {
     }
     port = SerialPort(_selectedPort, openNow: false);
     port!.openWithSettings(
-      BaudRate: baudRate,
-      ByteSize: byteSize,
-      StopBits: stopBits,
-      Parity: parity,
+      BaudRate: _baudRate,
+      ByteSize: _byteSize,
+      StopBits: _stopBits,
+      Parity: _parity,
     );
 
     _timer = Timer.periodic(Duration(milliseconds: 20), (timer) async {
       _uInt8Data = await port!.readBytes(1);
       if (_uInt8Data.isNotEmpty) {
         _receivedData = hex.encode(_uInt8Data).toUpperCase();
-        _allDataString += _receivedData + ' ';
+        receivedTextEditingController.text += _receivedData + ' ';
         notifyListeners();
       }
     });
@@ -78,19 +82,24 @@ class DataManager with ChangeNotifier {
     notifyListeners();
   }
 
+  void transmitData(String data){
+    port!.writeBytesFromString(data);
+    // notifyListeners();
+  }
+
   void config(String title, String value) {
     switch (title) {
       case '波特率':
-        baudRate = baudRateMap[value]!;
+        _baudRate = baudRateMap[value]!;
         break;
       case '数据位':
-        byteSize = dataBitsMap[value]!;
+        _byteSize = dataBitsMap[value]!;
         break;
       case '校验位':
-        parity = parityMap[value]!;
+        _parity = parityMap[value]!;
         break;
       case '停止位':
-        stopBits = stopBitsMap[value]!;
+        _stopBits = stopBitsMap[value]!;
         break;
       default:
         throw Exception('no such config title');

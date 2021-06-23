@@ -9,69 +9,72 @@ class PortsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     // final a = context.select<DataManager, String>((value) => value.defaultValue);
 
-    return Consumer<DataManager>(
-      child: Text(
-        '串口号:',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
-      builder: (_, dataManager, child) => ChangeNotifierProvider(
-        create: (_) =>
-            ComboMenuManager.fromPorts(items: dataManager.portsList),
-        child: Consumer<ComboMenuManager>(
-          builder: (_, combo, __) => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              child!,
-              Row(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        dataManager.updateCommPorts();
-                        // context.read<DataManager>().updateCommPorts();
-                        // combo.changeValue(context.read<DataManager>().defaultValue);
-                        combo.changeValue(dataManager.selectedPort);
-                        // combo.changeValue(a);
-                      },
-                      child: Container(
-                        child: Icon(
-                          Icons.refresh,
-                        ),
-                      )),
-                  SizedBox(
-                    width: 110,
-                    child: Container(
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                      padding: EdgeInsets.all(2),
-                      child: Combobox<String>(
-                        // style: TextStyle(),
-                        isExpanded: true,
-                        // isDense: true,
-                        items: dataManager.portsList
-                            .map((e) => ComboboxItem<String>(
-                                  value: e,
-                                  child: Text(e),
-                                ))
-                            .toList(),
-                        value: combo.comboBoxValue,
-                        // underline: Container(
-                        //   color: Colors.transparent,
-                        // ),
-                        onChanged: (value) {
-                          // print(value);
-                          // test(context);
-                          if (value != null) {
-                            combo.changeValue(value);
-                            dataManager.updateSelectedPort(value);
-                          }
-                          // if (value != null) setState(() => comboBoxValue = value);
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+      child: Consumer<DataManager>(
+        child: Text(
+          '串口号:',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        builder: (_, dataManager, child) => ChangeNotifierProvider(
+          create: (_) =>
+              ComboMenuManager.fromPorts(items: dataManager.portsList),
+          child: Consumer<ComboMenuManager>(
+            builder: (_, combo, __) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                child!,
+                Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          dataManager.updateCommPorts();
+                          // context.read<DataManager>().updateCommPorts();
+                          // combo.changeValue(context.read<DataManager>().defaultValue);
+                          combo.changeValue(dataManager.selectedPort);
+                          // combo.changeValue(a);
                         },
+                        child: Container(
+                          child: Icon(
+                            Icons.refresh,
+                          ),
+                        )),
+                    SizedBox(
+                      width: 110,
+                      child: Container(
+                        decoration:
+                            BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                        padding: EdgeInsets.all(2),
+                        child: Combobox<String>(
+                          // style: TextStyle(),
+                          isExpanded: true,
+                          // isDense: true,
+                          items: dataManager.portsList
+                              .map((e) => ComboboxItem<String>(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
+                          value: combo.comboBoxValue,
+                          // underline: Container(
+                          //   color: Colors.transparent,
+                          // ),
+                          onChanged: (value) {
+                            // print(value);
+                            // test(context);
+                            if (value != null) {
+                              combo.changeValue(value);
+                              dataManager.updateSelectedPort(value);
+                            }
+                            // if (value != null) setState(() => comboBoxValue = value);
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

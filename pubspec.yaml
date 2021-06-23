@@ -33,7 +33,7 @@ dependencies:
   ffi: ^1.0.0
   path: ^1.8.0
   provider: ^5.0.0
-  serial_port_win32: ^0.0.2
+  serial_port_win32: ^0.1.0
   tuple: ^2.0.0
   fluent_ui: ^2.1.1
   system_theme: ^1.0.1
