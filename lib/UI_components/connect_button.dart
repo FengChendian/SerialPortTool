@@ -5,34 +5,31 @@ import 'package:serialport_tool/data_manager.dart';
 class ConnectButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SideBarManager(),
-      child: SizedBox(
-        child: Consumer<SideBarManager>(
-          builder: (_, sideBarManager, __) => Consumer<DataManager>(
-            builder: (_, dataManager, __) => Row(
-              children: [
-                ToggleSwitch(
-                  checked: sideBarManager.hasConnected,
-                  // padding: EdgeInsets.symmetric(horizontal: 4),
-                  onChanged: (v) {
-                    if (dataManager.selectedPort == '') {
-                      return;
-                    }
-                    sideBarManager.changeConnectState(v);
-                    if (sideBarManager._hasConnected) {
-                      dataManager.start();
-                    } else {
-                      dataManager.stop();
-                    }
-                  },
-                ),
-                Text(
-                  sideBarManager.connectText!,
-                  style: TextStyle(fontFamily: "NotoSans SC"),
-                ),
-              ],
-            ),
+    return SizedBox(
+      child: Consumer<ConnectManager>(
+        builder: (_, connectManager, __) => Consumer<DataManager>(
+          builder: (_, dataManager, __) => Row(
+            children: [
+              ToggleSwitch(
+                checked: connectManager.hasConnected,
+                // padding: EdgeInsets.symmetric(horizontal: 4),
+                onChanged: (v) {
+                  if (dataManager.selectedPort == '') {
+                    return;
+                  }
+                  connectManager.changeConnectState(v);
+                  if (connectManager._hasConnected) {
+                    dataManager.start();
+                  } else {
+                    dataManager.stop();
+                  }
+                },
+              ),
+              Text(
+                connectManager.connectText!,
+                style: TextStyle(fontFamily: "NotoSans SC"),
+              ),
+            ],
           ),
         ),
       ),
@@ -40,7 +37,7 @@ class ConnectButton extends StatelessWidget {
   }
 }
 
-class SideBarManager with ChangeNotifier {
+class ConnectManager with ChangeNotifier {
   // Color _connectButtonColor = Colors.red;
 
   bool _hasConnected = false;
@@ -55,6 +52,12 @@ class SideBarManager with ChangeNotifier {
 
   void changeConnectState(bool v) {
     _hasConnected = v;
+    notifyListeners();
+  }
+
+  void disconnect(DataManager dataManager){
+    _hasConnected = false;
+    dataManager.stop();
     notifyListeners();
   }
 }

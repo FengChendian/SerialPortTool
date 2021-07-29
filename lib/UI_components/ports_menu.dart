@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 // import 'package:flutter/material.dart' show InkWell;
 import 'package:provider/provider.dart';
+import 'package:serialport_tool/UI_components/connect_button.dart';
 import 'package:serialport_tool/UI_components/title_combo_menu.dart';
 import 'package:serialport_tool/data_manager.dart';
 
@@ -36,38 +37,41 @@ class PortsMenu extends StatelessWidget {
                         },
                         child: Container(
                           child: Icon(
-                            Icons.refresh,
+                            FluentIcons.refresh,
                           ),
                         )),
-                    SizedBox(
-                      width: 110,
-                      child: Container(
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                        padding: EdgeInsets.all(2),
-                        child: Combobox<String>(
-                          // style: TextStyle(),
-                          isExpanded: true,
-                          // isDense: true,
-                          items: dataManager.portsList
-                              .map((e) => ComboboxItem<String>(
-                                    value: e,
-                                    child: Text(e),
-                                  ))
-                              .toList(),
-                          value: combo.comboBoxValue,
-                          // underline: Container(
-                          //   color: Colors.transparent,
-                          // ),
-                          onChanged: (value) {
-                            // print(value);
-                            // test(context);
-                            if (value != null) {
-                              combo.changeValue(value);
-                              dataManager.updateSelectedPort(value);
-                            }
-                            // if (value != null) setState(() => comboBoxValue = value);
-                          },
+                    Consumer<ConnectManager>(
+                      builder: (_, connectManager, __) => SizedBox(
+                        width: 110,
+                        child: Container(
+                          decoration:
+                              BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                          padding: EdgeInsets.all(2),
+                          child: Combobox<String>(
+                            // style: TextStyle(),
+                            isExpanded: true,
+                            // isDense: true,
+                            items: dataManager.portsList
+                                .map((e) => ComboboxItem<String>(
+                                      value: e,
+                                      child: Text(e),
+                                    ))
+                                .toList(),
+                            value: combo.comboBoxValue,
+                            // underline: Container(
+                            //   color: Colors.transparent,
+                            // ),
+                            onChanged: (value) {
+                              // print(value);
+                              // test(context);
+                              if (value != null) {
+                                connectManager.disconnect(dataManager);
+                                combo.changeValue(value);
+                                dataManager.updateSelectedPort(value);
+                              }
+                              // if (value != null) setState(() => comboBoxValue = value);
+                            },
+                          ),
                         ),
                       ),
                     ),

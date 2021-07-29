@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:serialport_tool/UI_components/ports_menu.dart';
 import 'package:serialport_tool/UI_components/title_combo_menu.dart';
 import 'package:serialport_tool/UI_components/connect_button.dart';
@@ -16,44 +17,47 @@ class ConfigBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(8, 0, 14, 0),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              child: Text(
-                "基础",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-              margin: EdgeInsets.only(bottom: 8),
-            ),
-            ConnectButton(),
-            Container(
-                // margin: EdgeInsets.fromLTRB(6, 2, 6, 8),
-                margin: EdgeInsets.only(top: 8),
-                height: 40,
+    return ChangeNotifierProvider(
+      create: (_) => ConnectManager(),
+      child: Container(
+        margin: EdgeInsets.fromLTRB(8, 0, 14, 0),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
                 child: Text(
-                  '设置',
-                  style: subtitleTextStyle,
-                )),
-            PortsMenu(),
-            TitleComboMenu(
-              title: '波特率',
-              items: baudRateMap.keys.toList(),
-              defaultItem: '115200',
-            ),
-            TitleComboMenu(
-              title: '数据位',
-              items: dataBitsMap.keys.toList(),
-              defaultItem: '8',
-            ),
-            TitleComboMenu(title: '校验位', items: parityMap.keys.toList()),
-            TitleComboMenu(title: '停止位', items: stopBitsMap.keys.toList())
-          ],
+                  "基础",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                ),
+                margin: EdgeInsets.only(bottom: 8),
+              ),
+              ConnectButton(),
+              Container(
+                  // margin: EdgeInsets.fromLTRB(6, 2, 6, 8),
+                  margin: EdgeInsets.only(top: 8),
+                  height: 40,
+                  child: Text(
+                    '设置',
+                    style: subtitleTextStyle,
+                  )),
+              PortsMenu(),
+              TitleComboMenu(
+                title: '波特率',
+                items: baudRateMap.keys.toList(),
+                defaultItem: '115200',
+              ),
+              TitleComboMenu(
+                title: '数据位',
+                items: dataBitsMap.keys.toList(),
+                defaultItem: '8',
+              ),
+              TitleComboMenu(title: '校验位', items: parityMap.keys.toList()),
+              TitleComboMenu(title: '停止位', items: stopBitsMap.keys.toList())
+            ],
+          ),
         ),
       ),
     );

@@ -22,8 +22,6 @@ class DataManager with ChangeNotifier {
 
   final receivedTextEditingController = TextEditingController();
 
-  late Timer _timer;
-
   List<String> portsList = [''];
 
   // String defaultValue = '';
@@ -58,14 +56,22 @@ class DataManager with ChangeNotifier {
       Parity: _parity,
     );
 
-    _timer = Timer.periodic(Duration(milliseconds: 20), (timer) async {
-      _uInt8Data = await port!.readBytes(1);
-      if (_uInt8Data.isNotEmpty) {
-        _receivedData = hex.encode(_uInt8Data).toUpperCase();
+    port!.readBytesOnListen(1, (value) {
+      if (value.isNotEmpty) {
+        _receivedData = hex.encode(value).toUpperCase();
         receivedTextEditingController.text += _receivedData + ' ';
         notifyListeners();
       }
     });
+
+    // _timer = Timer.periodic(Duration(milliseconds: 20), (timer) async {
+    //   _uInt8Data = await port!.readBytes(1);
+    //   if (_uInt8Data.isNotEmpty) {
+    //     _receivedData = hex.encode(_uInt8Data).toUpperCase();
+    //     receivedTextEditingController.text += _receivedData + ' ';
+    //     notifyListeners();
+    //   }
+    // });
   }
 
   void updateCommPorts() {
@@ -82,7 +88,7 @@ class DataManager with ChangeNotifier {
     notifyListeners();
   }
 
-  void transmitData(String data){
+  void transmitData(String data) {
     port!.writeBytesFromString(data);
     // notifyListeners();
   }
@@ -108,13 +114,13 @@ class DataManager with ChangeNotifier {
 
   void stop() {
     /// cancel or close all things
-    _timer.cancel();
+
     port!.close();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+
     port!.close();
 
     super.dispose();

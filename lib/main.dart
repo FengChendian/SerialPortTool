@@ -105,11 +105,11 @@ class MyHomePage extends StatelessWidget {
   final items = <NavigationPaneItem>[
     PaneItemHeader(header: Text('基本功能')),
     PaneItem(
-      icon: Icon(Icons.settings_input_component),
+      icon: Icon(FluentIcons.data_management_settings),
       title: Text("基本"),
     ),
     PaneItem(
-      icon: Icon(Icons.scatter_plot),
+      icon: Icon(FluentIcons.scatter_chart),
       title: Text("绘图"),
     ),
   ];
@@ -152,7 +152,7 @@ class MyHomePage extends StatelessWidget {
               navigationManager.changeIndex(paneTextList.indexOf(value));
             },
           ),
-          autoSuggestBoxReplacement: Icon(Icons.search),
+          autoSuggestBoxReplacement: Icon(FluentIcons.search),
         ),
         content: NavigationBody(
           index: navigationManager.index,
